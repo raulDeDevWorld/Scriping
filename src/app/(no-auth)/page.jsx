@@ -28,24 +28,26 @@ function CotizacionTerrestre() {
     console.log(data2.split('\n'))
     async function getContacts(e) {
         e.preventDefault()
-        const resDB = await Object.values(data2.split('\n')).map(async (i) => {
+        const resDB = await Object.values(data2.split('\n')).map(async (i, index) => {
             const res = await fetch(`https://numeracionyoperadores.cnmc.es/api/portabilidad/movil?numero=${i}&captchaLoad=true`)
             const db = await res.json()
-            acc = [...acc, db]
+            acc = [...acc, {...db,  order: index}]
+            console.log(acc)
+
             return setData(acc)
             // console.log(db)
             // setData([...data, db])
+
         })
 
 
-        return setData(acc)
+        // return setData(acc)
 
 
         // const res = await fetch(`https://numeracionyoperadores.cnmc.es/api/portabilidad/movil?numero=677617423&captchaLoad=true`)
         // const data = await res.json()
         // console.log(data)
     }
-
     function onChangeHandler2(e) {
         setData2(e.target.value)
 
@@ -113,7 +115,7 @@ function CotizacionTerrestre() {
                             </tr>
                         </thead>
                         <tbody>
-                            {data && data.map((i, index) => {
+                            {data && data.sort((a, b) => a.order - b.order).map((i, index) => {
 
                                 return <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
